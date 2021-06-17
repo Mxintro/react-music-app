@@ -12,7 +12,7 @@ const RecommendList = ({recommendList}) => {
       <h1 className="title">推荐歌单</h1>
       <List>
         {
-          recommendList.map ((item, index) => {
+          recommendList?.map ((item, index) => {
             return (
               <ListItem key={item.id + index}>
                 <div className="img_wrapper">
