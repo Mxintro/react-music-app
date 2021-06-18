@@ -20,6 +20,7 @@ const Scroll = forwardRef((props, ref) => {
 
   const { pullUp, pullDown, onScroll } = props;
 
+  // 初始化scroll
   useEffect(() => {
     const scroll = new BScroll(scrollContaninerRef.current, {
       scrollX: direction === "horizental",
@@ -38,6 +39,7 @@ const Scroll = forwardRef((props, ref) => {
     // eslint-disable-next-line
   }, []);
 
+  // 绑定onScroll事件
   useEffect(() => {
     if(!bScroll || !onScroll) return;
     bScroll.on('scroll', (scroll) => {
@@ -48,6 +50,7 @@ const Scroll = forwardRef((props, ref) => {
     }
   }, [onScroll, bScroll]);
 
+  // 
   useEffect(() => {
     if(!bScroll || !pullUp) return;
     bScroll.on('scrollEnd', () => {
