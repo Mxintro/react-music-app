@@ -33,9 +33,12 @@ const ListItem = styled.span`
 
 const Horizen = (props) => {
   const { list, oldVal, title } = props;
-  const { handleClick } = props;
+  // 暴露点击方式
+  const { handleClick } = props
   const Category = useRef (null);
+  // const [ activeKey, setActiveKey ] = useState('')
 
+  // 设置外包div宽度,不然scroll不滚动
   useEffect (() => {
     let categoryDOM = Category.current;
     let tagElems = categoryDOM.querySelectorAll ("span");
@@ -45,6 +48,11 @@ const Horizen = (props) => {
     });
     categoryDOM.style.width = `${totalWidth}px`;
   }, []);
+
+  // // 组件内处理
+  // const handleClick = (key) => {
+  //   setActiveKey(key)
+  // }
 
   return ( 
     <Scroll direction={"horizental"}>
@@ -56,7 +64,7 @@ const Horizen = (props) => {
               return (
                 <ListItem 
                   key={item.key}
-                  className={`${oldVal === item.key ? 'selected': ''}`} 
+                  className={`${ oldVal=== item.key ? 'selected': ''}`} 
                   onClick={() => handleClick (item.key)}>
                     {item.name}
                 </ListItem>

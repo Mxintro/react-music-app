@@ -29,10 +29,11 @@ const Recommend = (props) => {
 
   useEffect(() => {
     // 存在时不需要再发请求
-    if (!bannerList.size) {
+    console.log(bannerList, recommendList)
+    if (bannerList.length === 0) {
       dispatch(getBannerList())
     }
-    if (!recommendList.size) {
+    if (recommendList.length === 0) {
       dispatch(getRecommendList())
     }
   }, []);
