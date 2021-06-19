@@ -4,11 +4,13 @@ import { getHotSingerListRequest, getSingerListRequest } from '../../../api/requ
 //immer in redux
 
 export const getHotSingerList = createAsyncThunk(
-  'getHotSingerList',
-  async (count, { rejectWithValue, dispatch }) => {
+  'singers/getHotSingerList',
+  async (_, { rejectWithValue, dispatch, getState }) => {
+    const {singers: {pageCount}} = getState()
     try {
-      const data = await getHotSingerListRequest(count)
+      const data = await getHotSingerListRequest(pageCount)
       dispatch(changeSingerList(data?.artists))
+      dispatch(changeEnterLoading(false))
     } catch (error) {
       console.log(error)
       return rejectWithValue(error)
@@ -18,9 +20,10 @@ export const getHotSingerList = createAsyncThunk(
 
 // 两种用法，可以直接调用dispatch, 也可以放到extraReducers中
 export const getSingerList = createAsyncThunk(
-  'getSingerList',
-  async ({category, alpha, count}, {dispatch}) => {
-    const data = await getSingerListRequest(category, alpha, count)
+  'singers/getSingerList',
+  async ({type, area}, { dispatch, getState }) => {
+    const data = await getSingerListRequest(type, area, 0)
+    dispatch(changeSingerList(data?.artists))
     console.log(data)
   }
 )
@@ -41,8 +44,13 @@ export const singersSlice = createSlice({
     changeEnterLoading: (state, action) => {
       state.enterLoading = action.payload
     },
-    changePageCount: (state, action) => {
-      state.pageCount = action.payload
+    changePageCount: (state, { payload }) => {
+      // 分类情况
+      if ( payload === 0 ) {
+        state = { ...state, pageCount: 0, singerList: []}
+      } else {
+        state.pageCount = payload
+      }
     },
   }
 })

@@ -24,15 +24,18 @@
    +  拆开使用多useSelector
    +  使用 Reselect，或者使用memoized的selector
    +  可选参数中使用shallowEqual
-  ```
+  
+  ```js
   import { shallowEqual, useSelector } from 'react-redux'
   const selectedData = useSelector(selectorReturningObject, shallowEqual)
+  ``` 
 
 ## 例子
 ####  Using memoizing selectors
 memoizing selectors (e.g. created via createSelector from reselect) 
 When the selector does only depend on the state, simply ensure that it is declared outside of the component so that the same selector instance is used for each render
 简单在外部组件声明：
+
 ``` jsx
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'

@@ -7,6 +7,7 @@ import Scroll from '../../baseUI/scroll';
 import LazyLoad, { forceCheck } from 'react-lazyload';
 import { useDispatch, useSelector } from 'react-redux';
 import { getHotSingerList, getSingerList, changePageCount} from './store'
+import Loading from '../../baseUI/loading';
 
 const { useState, useEffect, useCallback } = React
 
@@ -16,17 +17,19 @@ const Singers = (props) => {
 
   const singerList = useSelector(({ singers }) => singers.singerList )
   const pageCount = useSelector(({ singers }) => singers.pageCount )
+  const enterLoading = useSelector(({ singers }) => singers.enterLoading)
 
   const dispatch = useDispatch()
 
   console.log('render')
   useEffect(() => {
     console.log(pageCount)
-    dispatch(getHotSingerList(pageCount))
+    dispatch(getHotSingerList())
   }, [pageCount])
 
   const handleUpdateCategory = useCallback((key) => {
     setCategory(key)
+    dispatch(changePageCount(0))
   },[category])
 
   const handleUpdateAlpha = useCallback((key) => {
@@ -80,6 +83,7 @@ const Singers = (props) => {
           { renderSingerList() }
         </Scroll>
       </ListContainer>
+      { enterLoading ? <Loading></Loading> : null }
     </NavContainer>
   )
 }

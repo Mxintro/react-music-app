@@ -4,7 +4,7 @@ import { getBannerRequest, getRecommendListRequest } from '../../../api/request'
 //immer in redux
 
 export const getBannerList = createAsyncThunk(
-  'getBannerList',
+  'recommend/getBannerList',
   async (_,{ rejectWithValue, dispatch }) => {
     try {
       const data = await getBannerRequest()
@@ -17,7 +17,7 @@ export const getBannerList = createAsyncThunk(
 
 // 两种用法，可以直接调用dispatch, 也可以放到extraReducers中
 export const getRecommendList = createAsyncThunk(
-  'getRecommendList',
+  'recommend/getRecommendList',
   async () => {
     const data = await getRecommendListRequest()
     return data.result
