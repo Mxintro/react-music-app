@@ -22,6 +22,8 @@ const Singers = (props) => {
   const enterLoading = useSelector(({ singers }) => singers.enterLoading)
   const dispatch = useDispatch()
 
+  console.log(pageCount)
+
   useEffect(() => {
     dispatch(getSingerList(getSingersListPayload))
   }, [pageCount])
@@ -46,6 +48,12 @@ const Singers = (props) => {
   const handlePullUp = () => {
     dispatch(changePageCount(pageCount+1))
     dispatch(changeEnterLoading(true))
+  }
+
+  const handlePullDown = () => {
+    dispatch(changePageCount(0))
+    dispatch(changeEnterLoading(true))
+    dispatch(getSingerList(getSingersListPayload))
   }
 
   const renderSingerList = () => {
@@ -86,6 +94,7 @@ const Singers = (props) => {
         <Scroll
           onScroll={forceCheck}
           pullUp={ handlePullUp }
+          pullDown={ handlePullDown }
           >
           { renderSingerList() }
         </Scroll>
