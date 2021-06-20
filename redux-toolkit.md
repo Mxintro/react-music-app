@@ -112,3 +112,5 @@ The `dispatch` function reference will be stable as long as the same store insta
 
 ## useStore
 This hook returns a reference to the same Redux store that was passed in to the <Provider> component.
+
+## createAsyncThunk

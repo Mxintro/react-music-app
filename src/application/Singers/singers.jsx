@@ -6,10 +6,12 @@ import { List, ListItem, ListContainer } from './style'
 import Scroll from '../../baseUI/scroll';
 import LazyLoad, { forceCheck } from 'react-lazyload';
 import { useDispatch, useSelector } from 'react-redux';
-import { getHotSingerList, getSingerList, changePageCount} from './store'
+import { getSingerList, changePageCount, resetState, changeEnterLoading} from './store'
 import Loading from '../../baseUI/loading';
 
 const { useState, useEffect, useCallback } = React
+
+const getSingersListPayload = {}
 
 const Singers = (props) => {
   const [category, setCategory] = useState('')
@@ -18,27 +20,32 @@ const Singers = (props) => {
   const singerList = useSelector(({ singers }) => singers.singerList )
   const pageCount = useSelector(({ singers }) => singers.pageCount )
   const enterLoading = useSelector(({ singers }) => singers.enterLoading)
-
   const dispatch = useDispatch()
 
-  console.log('render')
   useEffect(() => {
-    console.log(pageCount)
-    dispatch(getHotSingerList())
+    dispatch(getSingerList(getSingersListPayload))
   }, [pageCount])
 
-  const handleUpdateCategory = useCallback((key) => {
-    setCategory(key)
-    dispatch(changePageCount(0))
+  const handleUpdateCategory = useCallback((item) => {
+    const { type, area, name } = item
+    getSingersListPayload.type = type
+    getSingersListPayload.area = area
+    setCategory(name)
+    dispatch(resetState())
+    dispatch(getSingerList(getSingersListPayload))
   },[category])
 
-  const handleUpdateAlpha = useCallback((key) => {
-    setAlpha(key)
+  const handleUpdateAlpha = useCallback((item) => {
+    const { key, name } = item
+    getSingersListPayload.alpha = key
+    setAlpha(name)
+    dispatch(resetState())
+    dispatch(getSingerList(getSingersListPayload))
   },[alpha])
 
   const handlePullUp = () => {
-    console.log('pullUp')
     dispatch(changePageCount(pageCount+1))
+    dispatch(changeEnterLoading(true))
   }
 
   const renderSingerList = () => {

@@ -1,30 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getHotSingerListRequest, getSingerListRequest } from '../../../api/request';
 
-//immer in redux
-
-export const getHotSingerList = createAsyncThunk(
-  'singers/getHotSingerList',
-  async (_, { rejectWithValue, dispatch, getState }) => {
-    const {singers: {pageCount}} = getState()
-    try {
-      const data = await getHotSingerListRequest(pageCount)
-      dispatch(changeSingerList(data?.artists))
-      dispatch(changeEnterLoading(false))
-    } catch (error) {
-      console.log(error)
-      return rejectWithValue(error)
-    }
-  }
-)
-
-// 两种用法，可以直接调用dispatch, 也可以放到extraReducers中
 export const getSingerList = createAsyncThunk(
   'singers/getSingerList',
-  async ({type, area}, { dispatch, getState }) => {
-    const data = await getSingerListRequest(type, area, 0)
-    dispatch(changeSingerList(data?.artists))
-    console.log(data)
+  async ( payload, { dispatch, getState }) => {
+
+    const {singers: {pageCount}} = getState()
+    let data = {}
+    try {
+      if (!Object.keys(payload).length === 0) {
+        data = await getHotSingerListRequest(pageCount)
+      } else {
+        const { type, area, alpha} = payload
+        const initial = alpha && alpha.toLowerCase()
+        data = await getSingerListRequest(type, area, initial, pageCount)
+      }
+      data?.artists && dispatch(changeSingerList(data.artists))
+      dispatch(changeEnterLoading(false))
+    } catch (error) {
+      console.error(error)
+    }
   }
 )
 
@@ -38,6 +33,8 @@ export const singersSlice = createSlice({
     pageCount: 0
   },
   reducers: {
+    // The keys in the object will be used to generate string action type constants
+    // => { type: singers/changeSingerList}
     changeSingerList: (state, { payload }) => {
       state.singerList = [...state.singerList, ...payload]
     },
@@ -45,12 +42,10 @@ export const singersSlice = createSlice({
       state.enterLoading = action.payload
     },
     changePageCount: (state, { payload }) => {
-      // 分类情况
-      if ( payload === 0 ) {
-        state = { ...state, pageCount: 0, singerList: []}
-      } else {
-        state.pageCount = payload
-      }
+      state.pageCount = payload
+    },
+    resetState: (state) => {
+      return {...state, singerList: [], pageCount: 0, enterLoading: false}
     },
   }
 })
@@ -59,6 +54,7 @@ export const {
   changeSingerList,
   changeEnterLoading,
   changePageCount,
+  resetState,
 } = singersSlice.actions
 
 export default singersSlice.reducer

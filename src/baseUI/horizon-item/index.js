@@ -63,9 +63,9 @@ const Horizen = (props) => {
             list.map ((item) => {
               return (
                 <ListItem 
-                  key={item.key ? item.key : item.type +''+item.area}
-                  className={`${ oldVal=== item.key ? 'selected': ''}`} 
-                  onClick={() => handleClick (item.key)}>
+                  key={item.name}
+                  className={`${ oldVal=== item.name ? 'selected': ''}`} 
+                  onClick={() => handleClick (item)}>
                     {item.name}
                 </ListItem>
               )
